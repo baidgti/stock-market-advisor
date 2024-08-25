@@ -23,7 +23,7 @@ public class App
 
         System.out.println("Kérlek válassz az alábbi menüpontok közül");
         System.out.println("1: Részvény lekérdezés");
-        System.out.println("2: Kriptóvaluta lekérdezés");
+        System.out.println("2: Kriptovaluta lekérdezés");
         Scanner consoleScanner = new Scanner(System.in);
         int userChoice = 0;
         try {

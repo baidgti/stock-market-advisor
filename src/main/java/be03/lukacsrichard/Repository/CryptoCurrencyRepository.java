@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 
@@ -55,13 +56,46 @@ public class CryptoCurrencyRepository extends MainRepository<CryptoCurrency> {
     }
 
     @Override
-    public void Delete(String date) {
-        throw new UnsupportedOperationException("Unimplemented method 'Delete'");
+    public void Delete(String symbol) {
+        String sql = "DELETE FROM dbo.CryptoCurrency WHERE Symbol = ?";
+        try (Connection connection = this.databaseConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, symbol);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Delete successful. Rows affected: " + rowsAffected);
+            } else {
+                System.out.println("No rows were deleted.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<CryptoCurrency> GetAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'GetAll'");
+        String sql = "SELECT * FROM dbo.CryptoCurrency";
+        List<CryptoCurrency> cryptocurrencies = new ArrayList<>();
+        try (Connection connection = this.databaseConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String symbol = resultSet.getString("Symbol");
+                double fiftyTwoWeekMin = resultSet.getDouble("FiftyTwoWeekMin");
+                double fiftyTwoWeekMax = resultSet.getDouble("FiftyTwoWeekMax");
+                double rSI = resultSet.getDouble("RSI");
+                String longName = resultSet.getString("LongName");
+                double currentPrice = resultSet.getDouble("CurrentPrice");
+
+                CryptoCurrency cryptoCurrency = new CryptoCurrency(symbol, new String[0], new double[0], fiftyTwoWeekMin, fiftyTwoWeekMax, rSI, currentPrice, longName);
+                cryptocurrencies.add(cryptoCurrency);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cryptocurrencies;
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 
@@ -55,14 +56,49 @@ public class StockRepository extends MainRepository<Stock> {
     }
 
     @Override
-    public void Delete(String date) {
-        throw new UnsupportedOperationException("Unimplemented method 'Delete'");
+public void Delete(String symbol) {
+    String sql = "DELETE FROM dbo.Stock WHERE Symbol = ?";
+    try (Connection connection = this.databaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        preparedStatement.setString(1, symbol);
+
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Delete successful. Rows affected: " + rowsAffected);
+        } else {
+            System.out.println("No rows were deleted.");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+
 
     @Override
-    public List<Stock> GetAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'GetAll'");
+public List<Stock> GetAll() {
+    String sql = "SELECT * FROM dbo.Stock";
+    List<Stock> stocks = new ArrayList<>();
+    try (Connection connection = this.databaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+         ResultSet resultSet = preparedStatement.executeQuery()) {
+
+        while (resultSet.next()) {
+            String symbol = resultSet.getString("Symbol");
+            double fiftyTwoWeekMin = resultSet.getDouble("FiftyTwoWeekMin");
+            double fiftyTwoWeekMax = resultSet.getDouble("FiftyTwoWeekMax");
+            double rSI = resultSet.getDouble("RSI");
+            long marketCap = resultSet.getLong("MarketCap");
+            double currentPrice = resultSet.getDouble("CurrentPrice");
+
+            Stock stock = new Stock(symbol, new String[0], new double[0], fiftyTwoWeekMin, fiftyTwoWeekMax, rSI, marketCap, currentPrice);
+            stocks.add(stock);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return stocks;
+}
+
 
     @Override
     public Stock GetBySymbol(String symbol) {
