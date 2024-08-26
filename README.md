@@ -1,4 +1,4 @@
-A Stock Market Advisor alkalmazás egy egyszerű Java-alapú konzolos program, amely részvények és kriptovaluták adatait kezeli és dolgozza fel. Az alkalmazás fő célja, hogy a felhasználóknak segítséget nyújtson befektetési döntések meghozatalában, valamint lehetőséget biztosítson a részvények és kriptovaluták adatainak lekérdezésére, illetve fájlba írására.
+A Stock Market Advisor alkalmazás egy egyszerű Java-alapú konzolos program, amely részvények és kriptovaluták adatait kezeli és dolgozza fel. Az alkalmazás fő célja, hogy a felhasználóknak segítséget nyújtson befektetési döntések meghozatalában, valamint lehetőséget biztosítson a részvények és kriptovaluták adatainak lekérdezésére, illetve fájlba írására. A program a pénzügyi eszközök adatait a Yahoo Finance API végpontról kérdezi le, majd adatbázisban tárolja azokat.
 Főbb komponensek
 Az alkalmazás több fő komponensre tagolódik, melyek közül a legfontosabbak a következők:
 1.	App.java - Fő belépési pont (UI réteg)
