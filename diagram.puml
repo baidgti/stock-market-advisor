@@ -1,0 +1,108 @@
+@startuml
+
+' Class diagram including FinancialAsset, Stock, CryptoCurrency, IMainRepository, and MainRepository
+
+package "Model" {
+    abstract class FinancialAsset {
+        - symbol : String
+        - dates : String[]
+        - closingPrices : double[]
+        - fiftyTwoWeekMin : double
+        - fiftyTwoWeekMax : double
+        - rSI : double
+        - currentPrice : double
+        + getSymbol() : String
+        + getDates() : String[]
+        + getClosingPrices() : double[]
+        + getFiftyTwoWeekMin() : double
+        + getFiftyTwoWeekMax() : double
+        + getRSI() : double
+        + getCurrentPrice() : double
+        + setSymbol(symbol : String) : void
+        + setDates(dates : String[]) : void
+        + setClosingPrices(closingPrices : double[]) : void
+        + setFiftyTwoWeekMin(fiftyTwoWeekMin : double) : void
+        + setFiftyTwoWeekMax(fiftyTwoWeekMax : double) : void
+        + setRSI(rSI : double) : void
+        + setCurrentPrice(currentPrice : double) : void
+    }
+
+    class Stock extends FinancialAsset {
+        + getMarketCap() : String
+    }
+
+    class CryptoCurrency extends FinancialAsset {
+        + getLongName() : String
+    }
+}
+
+package "Logic" {
+    class StockLogic {
+        + getData(symbol : String) : Stock
+        + writeStockToFile(stock : Stock) : void
+    }
+
+    class CryptoCurrencyLogic {
+        + getData(symbol : String) : CryptoCurrency
+        + writeCryptoCurrencyToFile(cryptoCurrency : CryptoCurrency) : void
+    }
+}
+
+package "Repository" {
+    interface IMainRepository {
+        + Insert(item : Object) : void
+        + Update(symbol : String, item : Object) : void
+        + Delete(symbol : String) : void
+        + GetBySymbol(symbol : String) : Object
+        + GetAll() : List
+    }
+
+    abstract class MainRepository {
+        - databaseConnection : DatabaseConnection
+    }
+
+    class StockRepository extends MainRepository {
+        + getStockWithLowestRSI() : Map.Entry
+        + getStockWithHighestRSI() : Map.Entry
+    }
+
+    class CryptoCurrencyRepository extends MainRepository {
+        + getCryptoWithLowestRSI() : Map.Entry
+        + getCryptoWithHighestRSI() : Map.Entry
+    }
+}
+
+package "Exceptions" {
+    class WrongInputException extends Exception {
+        + WrongInputException(message : String) : void
+    }
+}
+
+package "UI" {
+    class App {
+        + main(args : String[]) : void
+        + userInput() : void
+    }
+}
+
+' Relationships
+App ..> StockRepository : uses
+App ..> CryptoCurrencyRepository : uses
+App ..> StockLogic : uses
+App ..> CryptoCurrencyLogic : uses
+App ..> WrongInputException : throws
+
+StockRepository --> Stock : manages
+CryptoCurrencyRepository --> CryptoCurrency : manages
+
+StockLogic --> Stock : processes
+CryptoCurrencyLogic --> CryptoCurrency : processes
+
+Stock --|> FinancialAsset
+CryptoCurrency --|> FinancialAsset
+
+StockRepository --|> MainRepository
+CryptoCurrencyRepository --|> MainRepository
+MainRepository ..|> IMainRepository
+
+@enduml

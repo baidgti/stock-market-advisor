@@ -32,6 +32,13 @@
     <version>12.6.1.jre11</version>
   </dependency>
 
+  <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>5.5.0</version>
+    <scope>test</scope>
+  </dependency>
+
   <dependency>   
     <groupId>org.apache.commons</groupId>  
     <artifactId>commons-dbcp2</artifactId>  
