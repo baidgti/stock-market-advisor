@@ -2,5 +2,5 @@ Symbol: TSLA
 Current Price: 220.32
 52 Week Min: 142.05
 52 Week Max: 276.04
-RSI: 72.8
+RSI: 72.81
 Market Cap: 0
